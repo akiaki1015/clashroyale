@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Console\Commands;
 
 class ClashRoyale
@@ -8,13 +9,12 @@ class ClashRoyale
     private $clansUrl = 'https://api.clashroyale.com/v1/clans/%23PLY98RCJ';
     private $warUrl = 'https://api.clashroyale.com/v1/clans/%23PLY98RCJ/currentwar';
 
-
     public function __construct($client)
     {
         $this->client = $client;
         $this->option = [
             'headers' => [
-                'authorization' => "Bearer ". env('CLASHROYALE_TOKEN'),
+                'authorization' => "Bearer " . env('CLASHROYALE_TOKEN'),
                 'Accept' => 'application/json',
             ],
             'http_errors' => false,
@@ -24,7 +24,7 @@ class ClashRoyale
     public function get()
     {
         $memberList = [];
-        $response = $this->client->request('GET', $this->clansUrl, $this->option); 
+        $response = $this->client->request('GET', $this->clansUrl, $this->option);
         if ($response->getStatusCode() != '200') {
             echo "clans url is not";
         } else {
@@ -34,17 +34,17 @@ class ClashRoyale
 
         return $this->getMessage($memberList);
     }
-    
+
     public function getWar()
     {
         $currentwar = [];
-        $response = $this->client->request('GET', $this->warUrl, $this->option); 
+        $response = $this->client->request('GET', $this->warUrl, $this->option);
         if ($response->getStatusCode() != '200') {
             echo "war url is not";
         } else {
             $results['war'] = json_decode($response->getBody()->getContents());
             $state = $results['war']->state;
-            switch($state) {
+            switch ($state) {
                 case 'notInWar':
                     return [$state, []];
                 case 'collectionDay':
@@ -62,7 +62,7 @@ class ClashRoyale
 
     private function getMemberList($memberList = [])
     {
-        if (empty($memberList))  {
+        if (empty($memberList)) {
             exit("データ取れない");
         }
 
@@ -81,7 +81,7 @@ class ClashRoyale
 
     private function getCurrentWar($participants = [])
     {
-        if (empty($participants))  {
+        if (empty($participants)) {
             exit("データ取れない");
         }
 
@@ -95,7 +95,7 @@ class ClashRoyale
                 'numberOfBattles' => $member->numberOfBattles ?? 0,
             ];
         }
-        
+
         return $output;
     }
 
@@ -103,24 +103,21 @@ class ClashRoyale
     private function getMessage($output)
     {
         // ソートするときの列を取り出す
-        foreach ( $output as $key => $row) {
+        foreach ($output as $key => $row) {
             $donations[$key] = $row['donations'] ?? 0;
         }
         array_multisort($donations, SORT_DESC, $output);
 
-        $donations = '寄付';
-        $leaveDays = '放置日';
-
-        $outputMessageList[] = '順位 寄付 放置日 プレイヤー名';
+        $outputMessageList[] = '順位 寄付した数 もらった数 放置日 プレイヤー名';
         $count = count($output);
         $beforeDonation = null;
-        $i=0;
-        $j=0; // ランク用
-        foreach( $output as $member => $value) {
-            $donation =  $value['donations'] ?? 0;
-            if ( $donation != $beforeDonation) {
+        $i = 0;
+        $j = 0; // ランク用
+        foreach ($output as $member => $value) {
+            $donation = $value['donations'] ?? 0;
+            if ($donation != $beforeDonation) {
                 $i++;
-                if ($j > 0 ) {
+                if ($j > 0) {
                     $i += $j;
                     $j = 0;
                 }
@@ -129,10 +126,11 @@ class ClashRoyale
             }
             $beforeDonation = $donation;
 
-            $outputMessageList[] = sprintf("%02d位 %d枚 %d日 %s", 
+            $outputMessageList[] = sprintf('%02d位 %4d枚 %4d枚 %d日 %s',
                 $i,
-                $donation, 
-                $value['leaveDays'], 
+                $donation,
+                $value['donationsReceived'],
+                $value['leaveDays'],
                 $member
             );
         }
@@ -142,24 +140,24 @@ class ClashRoyale
     private function getMessageCollectionDay($output)
     {
         // ソートするときの列を取り出す
-        foreach ( $output as $key => $row) {
+        foreach ($output as $key => $row) {
             $cardsEarned[$key] = $row['cardsEarned'];
             $collectionDayBattlesPlayed[$key] = $row['collectionDayBattlesPlayed'];
             $wins[$key] = $row['wins'];
         }
         array_multisort(
-            $cardsEarned, SORT_DESC, 
-            $collectionDayBattlesPlayed, SORT_DESC, 
-            $wins, SORT_DESC, 
+            $cardsEarned, SORT_DESC,
+            $collectionDayBattlesPlayed, SORT_DESC,
+            $wins, SORT_DESC,
             $output
         );
         $cardsEarned = '獲得数';
         $collectionDayBattlesPlayed = '準備対戦数';
         $wins = '勝利数';
 
-        $outputMessageList[] = $cardsEarned.'/'.$collectionDayBattlesPlayed.'/'.$wins. ' プレイヤー名';
-        foreach( $output as $member => $value) {
-            $outputMessageList[] = sprintf("%4d/%d/%d %s", 
+        $outputMessageList[] = $cardsEarned . '/' . $collectionDayBattlesPlayed . '/' . $wins . ' プレイヤー名';
+        foreach ($output as $member => $value) {
+            $outputMessageList[] = sprintf("%4d/%d/%d %s",
                 $value['cardsEarned'],
                 $value['collectionDayBattlesPlayed'],
                 $value['wins'],
@@ -172,21 +170,21 @@ class ClashRoyale
     private function getMessageWarDay($output)
     {
         // ソートするときの列を取り出す
-        foreach ( $output as $key => $row) {
+        foreach ($output as $key => $row) {
             $wins[$key] = $row['wins'];
             $battlesPlayed[$key] = $row['battlesPlayed'];
             $numberOfBattles[$key] = $row['numberOfBattles'];
         }
         array_multisort(
-            $wins, SORT_DESC, 
+            $wins, SORT_DESC,
             $battlesPlayed, SORT_DESC,
             $numberOfBattles, SORT_DESC,
             $output
         );
 
         $outputMessageList[] = '勝利数/プレイ数/バトル数 プレイヤー名';
-        foreach( $output as $member => $value) {
-            $outputMessageList[] = sprintf("%d/%d/%d %s", 
+        foreach ($output as $member => $value) {
+            $outputMessageList[] = sprintf("%d/%d/%d %s",
                 $value['wins'],
                 $value['battlesPlayed'],
                 $value['numberOfBattles'],
