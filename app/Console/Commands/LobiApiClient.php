@@ -4,9 +4,6 @@ namespace App\Console\Commands;
 
 class LobiApiClient
 {
-
-    private $env = 'PROD'; // TEST or PROD
-
     private $uid;
     private $mail;
     private $password;
@@ -20,7 +17,8 @@ class LobiApiClient
 
     public function __construct()
     {
-        $this->uid = env('LOBI_' . $this->env . '_UID');
+        $env = env('TEST_OR_PROD');
+        $this->uid = env('LOBI_UID_' . $env);
 
         $this->mail = env('LOBI_ACCOUNT');
         $this->password = env('LOBI_PASSWORD');

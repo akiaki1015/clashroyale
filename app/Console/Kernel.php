@@ -13,8 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\TestBatch::class,
-        \App\Console\Commands\TestBatchWar::class,
+        \App\Console\Commands\GiftCount::class,
+        \App\Console\Commands\BattleWar::class,
     ];
 
     /**
@@ -25,11 +25,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('batch:test')
+        $schedule->command('GiftCount lobi')
             ->sendOutputTo('logger')
             ->cron('0 20 * * 0');
 
-        $schedule->command('batch:test:war')
+        $schedule->command('BattleWar lobi')
             ->sendOutputTo('logger')
             ->cron('0 8 * * *');
     }
