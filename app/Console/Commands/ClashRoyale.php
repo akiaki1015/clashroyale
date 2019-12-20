@@ -11,10 +11,12 @@ class ClashRoyale
 
     public function __construct($client)
     {
+        $env = env('TEST_OR_PROD');
+
         $this->client = $client;
         $this->option = [
             'headers' => [
-                'authorization' => "Bearer " . env('CLASHROYALE_TOKEN'),
+                'authorization' => "Bearer " . env('CLASHROYALE_TOKEN_' . $env),
                 'Accept' => 'application/json',
             ],
             'http_errors' => false,

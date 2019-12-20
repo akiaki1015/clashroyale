@@ -29,7 +29,15 @@ class Kernel extends ConsoleKernel
             ->sendOutputTo('logger')
             ->cron('0 20 * * 0');
 
+        $schedule->command('GiftCount discord')
+            ->sendOutputTo('logger')
+            ->cron('0 20 * * 0');
+
         $schedule->command('BattleWar lobi')
+            ->sendOutputTo('logger')
+            ->cron('0 8 * * *');
+
+        $schedule->command('BattleWar discord')
             ->sendOutputTo('logger')
             ->cron('0 8 * * *');
     }
