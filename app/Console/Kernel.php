@@ -27,6 +27,10 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('GiftCount discord')
             ->sendOutputTo('logger')
+            ->cron('0 20 * * *');
+
+        $schedule->command('GiftCount sunday')
+            ->sendOutputTo('logger')
             ->cron('0 20 * * 0');
 
         $schedule->command('BattleWar discord')

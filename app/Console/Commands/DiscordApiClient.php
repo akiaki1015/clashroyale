@@ -12,7 +12,9 @@ class DiscordApiClient
 
     private $host = 'https://discordapp.com/api';
 
-    private $resultOutputString = '寄付数ランキング 発表';
+    private $resultOutputString = 'ランキング 発表';
+
+    private $helloOutputString = '今週加入したクランメンバー';
 
     private $noWarString = 'クラン対戦してません';
     private $collectionString = '準備日の経過';
@@ -43,6 +45,19 @@ class DiscordApiClient
         $message['embed'] =
             [
                 'title' => $this->resultOutputString,
+                'description' => implode("\n", $messageList)
+            ];
+        $this->option['json'] = $message;
+        $url = $this->host . '/channels/' . $this->giftChannel . '/messages';
+        $response = $this->client->request('POST', $url, $this->option);
+        echo $response->getBody()->getcontents();
+    }
+
+    public function helloMessage($messageList)
+    {
+        $message['embed'] =
+            [
+                'title' => $this->helloOutputString,
                 'description' => implode("\n", $messageList)
             ];
         $this->option['json'] = $message;

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Storage;
 
 class GiftCount extends Command
 {
@@ -19,7 +20,7 @@ class GiftCount extends Command
      *
      * @var string
      */
-    protected $description = '寄付数をカウントして結果を出力する tool = bot or lobi or discord';
+    protected $description = '寄付数をカウントして結果を出力する tool = bot or discord';
 
     /**
      * Create a new command instance.
@@ -38,7 +39,7 @@ class GiftCount extends Command
      */
     public function handle()
     {
-        $toolList = ['bot','lobi', 'discord'];
+        $toolList = ['bot', 'discord', 'sunday'];
         $tool = $this->argument('tool');
         if (!in_array($tool, $toolList, true)) {
             exit("$tool は許可されていない出力先です");
@@ -48,18 +49,36 @@ class GiftCount extends Command
         $clash = new ClashRoyale($client);
         $messageList = $clash->get();
 
+        $prettyMessage = new PrettyMessage();
+
+        $outputMessage = $prettyMessage->createClanMember($messageList);
+
         switch($tool) {
             case 'bot':
-                echo implode("\n", $messageList);
-                break;
-            case 'lobi':
-                $lobiClient = new LobiApiClient();
-                $lobiClient->giftMessage($messageList);
+                echo implode("\n", $outputMessage);
                 break;
 
             case 'discord':
                 $discordClient = new DiscordApiClient(new Client());
-                $discordClient->giftMessage($messageList);
+                $discordClient->giftMessage($outputMessage);
+                break;
+
+            case 'sunday':
+                $nowMemberAndTagList = $prettyMessage->createMemberAndTag($messageList);
+
+                $lastMemberAndTagList = Storage::disk('local')->get('lastMemberAndTagList');
+                $lastMemberAndTagList = json_decode($lastMemberAndTagList, true);
+
+                $helloMember = array_diff_assoc($nowMemberAndTagList, $lastMemberAndTagList);
+
+                Storage::disk('local')->put('lastMemberAndTagList', json_encode($nowMemberAndTagList));
+
+                $outputMessage = $prettyMessage->helloMember($helloMember);
+                if (!empty($outputMessage)) {
+                    $discordClient = new DiscordApiClient(new Client());
+                    $discordClient->helloMessage($outputMessage);
+                }
+
                 break;
         }
     }

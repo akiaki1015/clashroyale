@@ -38,7 +38,7 @@ class BattleWar extends Command
      */
     public function handle()
     {
-        $toolList = ['bot','lobi', 'discord'];
+        $toolList = ['bot', 'discord'];
         $tool = $this->argument('tool');
         if (!in_array($tool, $toolList, true)) {
             exit("$tool は許可されていない出力先です");
@@ -51,10 +51,6 @@ class BattleWar extends Command
         switch($tool) {
             case 'bot':
                 echo implode("\n", $messageList);
-                break;
-            case 'lobi':
-                $lobiClient = new LobiApiClient();
-                $lobiClient->warMessage($state, $messageList);
                 break;
             case 'discord':
                 $discordClient = new DiscordApiClient(new Client());

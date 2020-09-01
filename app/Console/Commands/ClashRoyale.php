@@ -34,7 +34,7 @@ class ClashRoyale
             $memberList = $this->getMemberList($results['clans']->memberList);
         }
 
-        return $this->getMessage($memberList);
+        return $memberList;
     }
 
     public function getWar()
@@ -73,6 +73,8 @@ class ClashRoyale
         foreach ($memberList as $member) {
             $time = new \DateTime(substr($member->lastSeen, 0, -5));
             $output[$member->name] = [
+                'clanRank' => $member->clanRank,
+                'tag' => $member->tag,
                 'donations' => $member->donations,
                 'leaveDays' => $nowTime->diff($time)->days,
                 'donationsReceived' => $member->donationsReceived,
@@ -102,7 +104,7 @@ class ClashRoyale
     }
 
 
-    private function getMessage($output)
+    public function getMessage($output)
     {
         // ソートするときの列を取り出す
         foreach ($output as $key => $row) {
@@ -138,6 +140,9 @@ class ClashRoyale
         }
         return $outputMessageList;
     }
+
+
+
 
     private function getMessageCollectionDay($output)
     {
