@@ -55,10 +55,12 @@ class DiscordApiClient
 
     public function helloMessage($messageList)
     {
+        $description = '今週は誰も加入してませんよ';
+
         $message['embed'] =
             [
                 'title' => $this->helloOutputString,
-                'description' => implode("\n", $messageList)
+                'description' => empty($messageList) ? $description : implode("\n", $messageList)
             ];
         $this->option['json'] = $message;
         $url = $this->host . '/channels/' . $this->giftChannel . '/messages';

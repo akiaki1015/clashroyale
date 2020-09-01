@@ -74,10 +74,8 @@ class GiftCount extends Command
                 Storage::disk('local')->put('lastMemberAndTagList', json_encode($nowMemberAndTagList));
 
                 $outputMessage = $prettyMessage->helloMember($helloMember);
-                if (!empty($outputMessage)) {
-                    $discordClient = new DiscordApiClient(new Client());
-                    $discordClient->helloMessage($outputMessage);
-                }
+                $discordClient = new DiscordApiClient(new Client());
+                $discordClient->helloMessage($outputMessage);
 
                 break;
         }
