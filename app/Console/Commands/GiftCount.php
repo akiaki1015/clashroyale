@@ -71,9 +71,8 @@ class GiftCount extends Command
                 $noPlayMemberList = $prettyMessage->noPlayMember($messageList);
 
                 $goodByeMessage = $prettyMessage->createNoPlayGoodByeMessage($noPlayMemberList);
-                print_r($goodByeMessage);
-                //$discordClient = new DiscordApiClient(new Client());
-                //$discordClient->noPlayMessage($noPlayMemberList);
+                $discordClient = new DiscordApiClient(new Client());
+                $discordClient->noPlayMessage($goodByeMessage);
                 break;
 
             case 'sunday':
