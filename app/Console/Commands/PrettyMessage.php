@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Console\Commands;
@@ -43,7 +42,6 @@ class PrettyMessage
     }
 
 
-
     public function noPlayMember($memberList)
     {
         $leaveDays = 5;
@@ -76,7 +74,7 @@ class PrettyMessage
         }
         if (!empty($outputMessageList)) {
             array_unshift($outputMessageList,
-                sprintf('%s','名前')
+                sprintf('%s', '名前')
             );
         }
 
@@ -91,7 +89,7 @@ class PrettyMessage
         }
         if (!empty($outputMessageList)) {
             array_unshift($outputMessageList,
-                sprintf('%-6s %-12s','放置日', '名前')
+                sprintf('%-6s %-12s', '放置日', '名前')
             );
         }
 
@@ -106,7 +104,7 @@ class PrettyMessage
         }
         if (!empty($outputMessageList)) {
             array_unshift($outputMessageList,
-                sprintf('%5s %-12s','寄付数', '名前')
+                sprintf('%5s %-12s', '寄付数', '名前')
             );
         }
 
