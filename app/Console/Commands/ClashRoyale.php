@@ -72,7 +72,8 @@ class ClashRoyale
         $nowTime = new \DateTime('now');
         foreach ($memberList as $member) {
             $time = new \DateTime(substr($member->lastSeen, 0, -5));
-            $output[$member->name] = [
+            $output[] = [
+                'name' => $member->name,
                 'clanRank' => $member->clanRank,
                 'tag' => $member->tag,
                 'donations' => $member->donations,

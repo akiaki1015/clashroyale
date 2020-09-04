@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Console\Commands;
@@ -26,7 +27,8 @@ class PrettyMessage
         return $outputMessageList;
     }
 
-    public function createMemberAndTag($memberList) {
+    public function createMemberAndTag($memberList)
+    {
 
         // tagでソートしておく
         foreach ($memberList as $key => $row) {
@@ -34,17 +36,80 @@ class PrettyMessage
         }
         array_multisort($tag, SORT_ASC, $memberList);
         $outputMessageList = [];
-        foreach ($memberList as $member => $value) {
-            $outputMessageList[$value['tag']] = $member;
+        foreach ($memberList as $value) {
+            $outputMessageList[] = $value;
         }
         return $outputMessageList;
     }
 
-    public function helloMember($helloMemberList) {
+
+
+    public function noPlayMember($memberList)
+    {
+        $leaveDays = 5;
         $outputMessageList = [];
-        foreach ($helloMemberList as $tag => $member) {
-            $outputMessageList[] = sprintf("%s %s", $member, $tag);
+        foreach ($memberList as $value) {
+            if ($value['leaveDays'] >= $leaveDays) {
+                $outputMessageList[] = $value;
+            }
         }
+        return $outputMessageList;
+    }
+
+    public function noGiftMember($memberList)
+    {
+        $giftCount = 100;
+        $outputMessageList = [];
+        foreach ($memberList as $value) {
+            if ($value['donations'] < $giftCount) {
+                $outputMessageList[] = $value;
+            }
+        }
+        return $outputMessageList;
+    }
+
+    public function createNewMessage($memberList)
+    {
+        $outputMessageList = [];
+        foreach ($memberList as $value) {
+            $outputMessageList[] = sprintf("%s", $value);
+        }
+        if (!empty($outputMessageList)) {
+            array_unshift($outputMessageList,
+                sprintf('%s','名前')
+            );
+        }
+
+        return $outputMessageList;
+    }
+
+    public function createNoPlayGoodByeMessage($memberList)
+    {
+        $outputMessageList = [];
+        foreach ($memberList as $value) {
+            $outputMessageList[] = sprintf("%-6s %-12s", $value['leaveDays'], $value['name']);
+        }
+        if (!empty($outputMessageList)) {
+            array_unshift($outputMessageList,
+                sprintf('%-6s %-12s','放置日', '名前')
+            );
+        }
+
+        return $outputMessageList;
+    }
+
+    public function createGoodByeMessage($memberList)
+    {
+        $outputMessageList = [];
+        foreach ($memberList as $value) {
+            $outputMessageList[] = sprintf("%5d %-12s", $value['donations'], $value['name']);
+        }
+        if (!empty($outputMessageList)) {
+            array_unshift($outputMessageList,
+                sprintf('%5s %-12s','寄付数', '名前')
+            );
+        }
+
         return $outputMessageList;
     }
 }

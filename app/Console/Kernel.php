@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('GiftCount discord')
+        $schedule->command('GiftCount noPlayCheck')
             ->sendOutputTo('logger')
             ->cron('0 20 * * *');
 

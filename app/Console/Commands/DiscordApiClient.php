@@ -68,6 +68,36 @@ class DiscordApiClient
         echo $response->getBody()->getcontents();
     }
 
+    public function noPlayMessage($messageList)
+    {
+        $description = 'みんな放置していません';
+
+        $message['embed'] =
+            [
+                'title' => '放置したメンバーチェック',
+                'description' => empty($messageList) ? $description : implode("\n", $messageList)
+            ];
+        $this->option['json'] = $message;
+        $url = $this->host . '/channels/' . $this->giftChannel . '/messages';
+        $response = $this->client->request('POST', $url, $this->option);
+        echo $response->getBody()->getcontents();
+    }
+
+    public function noGiftMessage($messageList)
+    {
+        $description = 'みんな100枚以上寄付したよ';
+
+        $message['embed'] =
+            [
+                'title' => '寄付数チェック',
+                'description' => empty($messageList) ? $description : implode("\n", $messageList)
+            ];
+        $this->option['json'] = $message;
+        $url = $this->host . '/channels/' . $this->giftChannel . '/messages';
+        $response = $this->client->request('POST', $url, $this->option);
+        echo $response->getBody()->getcontents();
+    }
+
     public function warMessage($state, $messageList)
     {
         switch ($state) {
