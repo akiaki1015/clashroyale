@@ -71,6 +71,8 @@ class GiftCount extends Command
                 $noPlayMemberList = $prettyMessage->noPlayMember($messageList);
 
                 $goodByeMessage = $prettyMessage->createNoPlayGoodByeMessage($noPlayMemberList);
+                //echo implode("", $goodByeMessage);
+                //exit;
                 $discordClient = new DiscordApiClient(new Client());
                 $discordClient->noPlayMessage($goodByeMessage);
                 break;
@@ -82,8 +84,6 @@ class GiftCount extends Command
                     array_column($nowMemberList, 'tag'),
                     array_column($nowMemberList, 'name')
                 );
-
-                print_r($nowTagMemberList);
 
                 $lastTagMemberList = json_decode(
                     Storage::disk('local')->get('lastTagMemberList'), true

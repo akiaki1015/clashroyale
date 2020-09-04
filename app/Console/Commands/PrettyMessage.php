@@ -85,11 +85,11 @@ class PrettyMessage
     {
         $outputMessageList = [];
         foreach ($memberList as $value) {
-            $outputMessageList[] = sprintf("%-6s %-12s", $value['leaveDays'], $value['name']);
+            $outputMessageList[] = sprintf("%s日 %s", $value['leaveDays'], trim($value['name']));
         }
         if (!empty($outputMessageList)) {
             array_unshift($outputMessageList,
-                sprintf('%-6s %-12s', '放置日', '名前')
+                sprintf("%s %s", '放置日', '名前')
             );
         }
 
@@ -100,11 +100,11 @@ class PrettyMessage
     {
         $outputMessageList = [];
         foreach ($memberList as $value) {
-            $outputMessageList[] = sprintf("%5d %-12s", $value['donations'], $value['name']);
+            $outputMessageList[] = sprintf("%d %s", $value['donations'], $value['name']);
         }
         if (!empty($outputMessageList)) {
             array_unshift($outputMessageList,
-                sprintf('%5s %-12s', '寄付数', '名前')
+                sprintf("%s %s", '寄付数', '名前')
             );
         }
 

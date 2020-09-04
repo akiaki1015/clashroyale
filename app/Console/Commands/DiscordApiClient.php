@@ -75,7 +75,9 @@ class DiscordApiClient
         $message['embed'] =
             [
                 'title' => '放置したメンバーチェック',
-                'description' => empty($messageList) ? $description : implode("\n", $messageList)
+                'description' => empty($messageList) ?
+                    $description :
+                    implode("\n", $messageList)
             ];
         $this->option['json'] = $message;
         $url = $this->host . '/channels/' . $this->giftChannel . '/messages';
@@ -90,7 +92,9 @@ class DiscordApiClient
         $message['embed'] =
             [
                 'title' => '寄付数チェック',
-                'description' => empty($messageList) ? $description : implode("\n", $messageList)
+                'description' => empty($messageList) ?
+                    $description :
+                    implode("\n", $messageList)
             ];
         $this->option['json'] = $message;
         $url = $this->host . '/channels/' . $this->giftChannel . '/messages';
